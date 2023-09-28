@@ -51,8 +51,6 @@
 
 #### 5. Naudojant sugeneruotą failą kolizijų rasta nebuvo.
 
-#### 6.
-
 #### 7. Išvados
 Hash funkcija veikia su bet kokio ilgio simbolių eilute (išskyrus tuščią), sugeneruojamas hash'as yra 64 simbolių ilgio, funkcija deterministinė bei atspari kolizijai.
 
