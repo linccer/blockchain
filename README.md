@@ -49,7 +49,7 @@ Kurį simbolį ištrinti apskaičiuojama pagal 'output' ilgį ir aprašytas tais
 |        512       |     0.030923     |
 |        790       |     0.104057     |
 
-#### 5. Naudojant failą "generated.txt" kolizijų rasta nebuvo.
+#### 5. Naudojant sugeneruotą failą kolizijų rasta nebuvo.
 
 #### 6.
 
