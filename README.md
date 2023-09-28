@@ -2,17 +2,17 @@
 
 ## Pseudo-kodas
 
-Nustatoma kiekvieno simbolio unicode reikšmė.
-Ji padauginama iš skaičiaus X=73 pakelto tam tikru laipsniu.
-Laipsnis apskaičiuojamas dalinant dar neapdorotos simbolių eilutės dalies ilgį iš 10 ir paimant liekaną.
-Gauta reikšmė pridedama prie 'value' reikšmės, tuo pačiu verčiant skaičių iš 10-ainės į 16-ainę sistemą.
-Simbolis ištrinamas iš eilutės.
-Apdorojus visus simbolius patikrinama ar 'value' sudarytas iš bent 64 skaitmenų.
-Jei ne, 'value' dauginamas iš savęs paties tol, kol yra sudarytas iš 64 skaitmenų ar daugiau.
-Int vektoriuje 'value' saugomas skaičius išsaugomas string tipo kintamajame 'output'.
-naudojant reverse funkciją output tvarka pakeičiama į priešingą.
-Kol 'output' yra ilgesnis nei 64 simboliai, iš jo ištrinami simboliai.
-Kurį simbolį ištrinti apskaičiuojama pagal 'output' ilgį ir aprašytas taisykles.
+- Nustatoma kiekvieno simbolio unicode reikšmė.
+- Ji padauginama iš skaičiaus X=73 pakelto tam tikru laipsniu.
+- Laipsnis apskaičiuojamas dalinant dar neapdorotos simbolių eilutės dalies ilgį iš 10 ir paimant liekaną.
+- Gauta reikšmė pridedama prie 'value' reikšmės, tuo pačiu verčiant skaičių iš 10-ainės į 16-ainę sistemą.
+- Simbolis ištrinamas iš eilutės.
+- Apdorojus visus simbolius patikrinama ar 'value' sudarytas iš bent 64 skaitmenų.
+- Jei ne, 'value' dauginamas iš savęs paties tol, kol yra sudarytas iš 64 skaitmenų ar daugiau.
+- Int vektoriuje 'value' saugomas skaičius išsaugomas string tipo kintamajame 'output'.
+- naudojant reverse funkciją output tvarka pakeičiama į priešingą.
+- Kol 'output' yra ilgesnis nei 64 simboliai, iš jo ištrinami simboliai.
+- Kurį simbolį ištrinti apskaičiuojama pagal 'output' ilgį ir aprašytas taisykles.
 
 
 
