@@ -6,6 +6,8 @@
 #include <vector>
 #include <algorithm> 
 #include <chrono> 
+#include <bitset>
+#include <limits>
 
 
 using std::cout;
@@ -17,6 +19,9 @@ using std::ofstream;
 using std::stringstream;
 using std::vector;
 using std::to_string;
+using std::bitset;
+using std::numeric_limits;
+using std::streamsize;
 
 
 void readf();
@@ -24,6 +29,10 @@ string hash();
 void add(vector<int>& vec, unsigned long long x);
 void square(vector<int>& vec);
 void collisionTest ();
+void avalancheTest ();
+double comparehex(string hash1, string hash2);
+double comparebit(string hash1, string hash2);
+int charToHexVal(char a);
 
 
 string input="";
@@ -33,14 +42,42 @@ const int X = 73;
 
 int main () {
 
-    readf(); 
+    char choice='a';
+    bool readfile=false;
+    bool testcollisions=false;
+    bool testavalanche=false;
+
+    cout<<"Atlikti koliziju testa failui generated.txt? Taip - 'T', Ne - 'N'\n";
+        cin>>choice;
+        if (choice=='t' || choice=='T') testcollisions=true;
+        else {  while (choice!='n' && choice!='N' && choice!='t' && choice!='T') {cout<<"\nKlaida. Iveskite T arba N. "; cin.clear(); cin.ignore(numeric_limits<streamsize>::max(), '\n'); cin>>choice;}  }
+
+    choice='a';
+    cout<<"Atlikti procentinio skirtingumo testa failui generated2.txt? Taip - 'T', Ne - 'N'\n";
+        cin>>choice;
+        if (choice=='t' || choice=='T') testavalanche=true;
+        else {  while (choice!='n' && choice!='N' && choice!='t' && choice!='T') {cout<<"\nKlaida. Iveskite T arba N. "; cin.clear(); cin.ignore(numeric_limits<streamsize>::max(), '\n'); cin>>choice;}  }
+
+    choice='a';
+    cout<<"Skaityti input faila? Taip - 'T', Ne - 'N'\n";
+        cin>>choice;
+        if (choice=='t' || choice=='T') readfile=true;
+        else {  while (choice!='n' && choice!='N' && choice!='t' && choice!='T') {cout<<"\nKlaida. Iveskite T arba N. "; cin.clear(); cin.ignore(numeric_limits<streamsize>::max(), '\n'); cin>>choice;}  }
+
+
+
+
+
+
+    if (readfile) readf(); 
 
 
 auto start = std::chrono::high_resolution_clock::now();    //start timer
 
 
-    cout<<"Sugeneruotas hash:\n"<<hash();
-    collisionTest();
+    if (readfile) cout<<"Sugeneruotas hash:\n"<<hash();
+    if (testcollisions) collisionTest();
+    if (testavalanche) avalancheTest();
 
 
 auto stop = std::chrono::high_resolution_clock::now();     //end timer
@@ -116,6 +153,7 @@ string hash(){
         }
     }
     reverse(output.begin(), output.end()); 
+    value.clear();
     
 
 
@@ -193,35 +231,167 @@ void collisionTest () {
     ifstream file2("generated.txt");
     string line;
     bool first=true;
-    vector<string> hashes;
     input="";
-    string output="";
+    string temp="";
+    string hash1="";
+    string hash2="";
+    bool collisions=false;
 
+    cout<<"\nRunning colision test...\n";
 
     while (getline (file2, line)){
 
-        if (first==true) {input=line; first=false;}
+        if (first==true) {
+            input=line;
+            temp=line;
+            first=false;
+            hash1=hash();
+            }
 
         else {
             first=true;
-            input=input + " " + line;
+            input=line;
+            hash2=hash();
 
-            hashes.push_back( hash() );
-            input="";
-            }
+            if (hash1==hash2){
+                collisions=true;
+                break;
+            }//if
+            }//else
     }//while
 
-    sort(hashes.begin(),hashes.end());
-
-    bool collisions = std::adjacent_find(hashes.begin(), hashes.end()) != hashes.end();
-    if (collisions) cout<<"\n\nCollisions found\n"; else cout<<"\n\nNo collisions found\n";
-
-    for (auto i:hashes) output+=(i+"\n");
-
-    ofstream outp ("collision_test_hash_list.txt");
-    outp<<output;
-    outp.close();
-
-
+    if (collisions) {cout<<"\n\nCollisions found\nString 1: "<<temp<<"\nHash 1: "<<hash1<<"\nString 2: "<<line<<"\nHash 2: "<<hash2<<endl; }
+    else cout<<"\n\nNo collisions found\n";
 }
 //________________________________________________________________________________________________________________________________________________________
+
+
+
+void avalancheTest () {
+
+    ifstream file3("generated.txt");
+    string line;
+    bool first=true;
+    vector<double> hexdiff;
+    vector<double> bitdiff;
+    input="";
+    string hash1="";
+    string hash2="";
+
+    cout<<"\nRunning avalanche test...\n";
+
+    //bool print=true;
+
+    while (getline (file3, line)){
+
+        if (first==true) {
+            input=line;
+            first=false;
+            hash1=hash();
+            }
+
+        else {
+            first=true;
+            input=line;
+            hash2=hash();
+
+            //hex diff
+            hexdiff.push_back( comparehex(hash1,hash2));
+
+            //bit diff
+            bitdiff.push_back( comparebit(hash1,hash2));
+
+            //if (print){print=false; cout<<"\n"<<hash1<<"\n"<<hash2<<"\n"<<comparehex(hash1,hash2)<<endl<<comparebit(hash1,hash2)<<endl;}
+
+            }//else
+    }//while
+
+    sort(hexdiff.begin(),hexdiff.end());
+    sort(bitdiff.begin(),bitdiff.end());
+
+    long double avghex=0;
+    long double avgbit=0;
+    for (auto i:hexdiff) avghex+=i;
+    for (auto i:bitdiff) avgbit+=i;
+    avghex=avghex/hexdiff.size();
+    avgbit=avgbit/bitdiff.size();
+
+    cout<<"\nProcentinis skirtingumas:\n\nHex lygmenyje:\n     min: "<<hexdiff[0]<<"\n     max: "<<hexdiff.at(hexdiff.size()-1)<<"\n     vidurkis: "<<avghex<<"\n\nBit lygmenyje:\n     min: "<<bitdiff[0]<<"\n     max: "<<bitdiff.at(bitdiff.size()-1)<<"\n     vidurkis: "<<avgbit<<endl;
+
+
+    hexdiff.clear();
+    bitdiff.clear();
+}
+//________________________________________________________________________________________________________________________________________________________
+
+
+
+double comparehex(string hash1, string hash2){
+
+    double counter=0.0;
+
+    for (int a=0; a<64; a++){
+        if (hash1[a]==hash2[a]) counter++;
+    }
+
+    counter=(counter*100.0)/64.0;
+    return counter;
+}
+//________________________________________________________________________________________________________________________________________________________
+
+
+
+double comparebit(string hash1, string hash2){
+
+    int temp=0;
+    string binary1="";
+    string binary2="";
+
+    //get binary
+    for (int a=0; a<64; a++) {
+
+        temp=charToHexVal(hash1[a]);
+        bitset<4> binary(temp);
+        binary1+=binary.to_string();
+
+        temp=charToHexVal(hash2[a]);
+        bitset<4> binaryy(temp);
+        binary2+=binaryy.to_string();
+    }
+    //
+
+    double counter=0.0;
+
+    //count matches
+    for (int a=0; a<256; a++){
+        if (binary1[a]==binary2[a]) counter++;
+    }
+
+    //cout<<"\nbinary 1 - "<<binary1<<"\nlength - "<<binary1.length()<<endl;
+    //cout<<"\nbinary 2 - "<<binary2<<"\nlength - "<<binary2.length()<<endl<<counter<<endl;
+    counter=(counter*100.0)/256.0;
+    return counter;
+}
+//________________________________________________________________________________________________________________________________________________________
+
+
+int charToHexVal(char a){
+    switch(a){
+    case '0': return 0;
+    case '1': return 1;
+    case '2': return 2;
+    case '3': return 3;
+    case '4': return 4;
+    case '5': return 5;
+    case '6': return 6;
+    case '7': return 7;
+    case '8': return 8;
+    case '9': return 9;
+    case 'a': return 10;
+    case 'b': return 11;
+    case 'c': return 12;
+    case 'd': return 13;
+    case 'e': return 14;
+    case 'f': return 15;}
+return -1;
+}
