@@ -1,5 +1,34 @@
 # Hash funkcija
 
+# v0.2
+- Pakeistas ir iš naujo atliktas kolizijų testas
+- Pridėtas ir atliktas procentinio skirtingumo skaičiavimo testas
+- Pridėta galimybė pasirinkti programos funkcijas
+
+#### 5. Naudojant failus generated.txt ir generated2.txt kolizijų rasta nebuvo.
+
+#### 6. Procentinio skirtingumo skaičiavimai
+Lentelėse pateikta sutampančių simbolių ar bitų procentinė dalis sugeneruotuose simbolių eilučių porų hash'uose.
+| generated2.txt | Hex lygmenyje | Bitų lygmenyje |
+|:--------------:|:-------------:|:--------------:|
+|       Min      |    1.5625%    |    40.2344%    |
+|       Max      |    39.0625%   |    71.4844%    |
+|    Vidurkis    |    16.3926%   |    55.7459%    |
+
+| generated.txt | Hex lygmenyje | Bitų lygmenyje |
+|:-------------:|:-------------:|:--------------:|
+|      Min      |       0%      |    37.8906%    |
+|      Max      |    28.125%    |    64.8438%    |
+|    Vidurkis   |    7.5488%    |    51.0986%    |
+
+#### 7. Išvados
+- Funkcija tenkina lavinos efektą - minimaliai pakeitus simbolių eilutę (pakeitus 1 simbolį) jų hash'ai vidutiniškai skiriasi 83.6074%, minimaliai skiriasi 60.9375%.
+- Funkcija atspari kolizijai
+- Funkcija deterministinė
+- Funcija veikia su bet kokio ilgio simbolių eilute (išskyrus tuščią)
+- Sugeneruotas hash visuomet yra 64 simbolių ilgio
+
+# v0.1
 ## Pseudo-kodas
 
 - Nustatoma kiekvieno simbolio unicode reikšmė.
